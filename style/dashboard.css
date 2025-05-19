@@ -1,0 +1,16 @@
+body{
+ background-color: #f0eaea; 
+}
+
+.main-head{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.main-head .card{
+    background-color: #6f42c1;
+    color: #ffffff;
+    margin: 20px;
+    padding: 20px;
+    min-width: 25vw;
+}

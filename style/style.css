@@ -1,0 +1,28 @@
+ body{
+    background-color: #8EC5FC;
+background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
+} 
+.main-head{
+    background-color: rgb(254, 254, 251) !important;
+    height: 80vh;
+    width: 55vw;
+    padding: 50px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+ flex-direction: column;
+    vertical-align: middle;
+}
+.main-head .btn{
+    max-width: 150px;
+    margin:5px auto;
+}
+
+.container .card-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.container .card-container .card{
+    margin: 10px;
+}
