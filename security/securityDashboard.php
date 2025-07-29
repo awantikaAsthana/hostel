@@ -21,7 +21,25 @@ if (isset($_SESSION["loggedin"])) {
     window.location.href = '/hostel/';
     </script>";
     exit();
+
 }
+
+
+
+
+$sql_approved = "SELECT * FROM outpass o 
+                 INNER JOIN student s ON o.email = s.email 
+                 WHERE approval=1 
+                 ORDER BY created_on DESC";
+
+$sql_rejected = "SELECT * FROM outpass o 
+                 INNER JOIN student s ON o.email = s.email 
+                 WHERE approval=0 
+                 ORDER BY created_on DESC";
+
+
+$approved = mysqli_query($conn, $sql_approved);
+$rejected = mysqli_query($conn, $sql_rejected);
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +49,7 @@ if (isset($_SESSION["loggedin"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style/parentDashboard.css">
 </head>
 <body>
 <nav class="navbar bg-body-tertiary">
@@ -44,42 +62,64 @@ if (isset($_SESSION["loggedin"])) {
     </div>
 </nav>
 
-<div class="container">
-    <div class="card-container">
-        <h1 class="display-4 text-center">Approved & Rejected Outpass Details</h1>
+<div class="container my-5">
 
-        <div class="d-flex flex-wrap justify-content-center gap-2 mt-5">
-        <?php
-        $found = false;
-        foreach ($result as $row):
-            if (!is_null($row["f_approval"])):  // Only show if approved or rejected
-                $found = true;
-        ?>
-            <div class="card" style="width: 30rem;">
-                <div class="card-body">
-                    <h5 class="card-title">Outpass - <?= $row["outpassId"] ?></h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Duration: <?= $row["from_date"] ?> to <?= $row["to_date"] ?></h6>
-                    <p class="card-text">Email: <?= $row["email"] ?></p>
-                    <p class="card-text">Name: <?= $row["name"] ?></p>
-                    <p class="card-text">Year: <?= $row["year"] ?></p>
-                    <p class="card-text">Reason: <?= $row["reason"] ?></p>
-                    <p class="card-text">Created On: <?= $row["created_on"] ?></p>
-                    <p class="card-text">
-                        Status:
-                        <?= $row["f_approval"] ? "Approved (Reason): " . $row['r_approval'] : "Rejected (Reason): " . $row['r_approval'] ?>
-                    </p>
-                </div>
-            </div>
-        <?php
-            endif;
-        endforeach;
-
-        if (!$found) {
-            echo "<h3 class='text-center mt-5'>No Approved or Rejected Outpass Requests</h3>";
-        }
-        ?>
-        </div>
+    <!-- Filter Buttons -->
+    <div class="text-center mb-4">
+      
+      <button class="btn btn-primary mx-2" onclick="showSection('approved-section')">Approved</button>
+      <button class="btn btn-primary mx-2" onclick="showSection('rejected-section')">Rejected</button>
     </div>
-</div>
+
+   
+    <!-- Approved Section -->
+    <div id="approved-section" class="outpass-section d-none">
+      <h2 class="mt-5 mb-4">✅ Approved Outpasses</h2>
+      <div class="row g-4 justify-content-center">
+        <?php if(mysqli_num_rows($approved) > 0): foreach ($approved as $row): ?>
+          <div class="col-md-6 col-lg-4">
+            <div class="card p-4">
+              <h5 class="card-title">Outpass #<?= $row["outpassId"] ?></h5>
+              <h6 class="card-subtitle mb-2 text-muted">Duration: <?= $row["from_date"];?> → <?= $row["to_date"];?> </h6>
+              <p class="card-text"><strong>Reason:</strong> <?= $row["reason"] ?></p>
+              <p class="card-text"><small>Created on <?= $row["created_on"] ?></small></p>
+              <span class='approved'>Approved ✅</span>
+            </div>
+          </div>
+        <?php endforeach; else: ?>
+          <p class="text-muted">No approved requests.</p>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <!-- Rejected Section -->
+    <div id="rejected-section" class="outpass-section d-none">
+      <h2 class="mt-5 mb-4">❌ Rejected Outpasses</h2>
+      <div class="row g-4 justify-content-center">
+        <?php if(mysqli_num_rows($rejected) > 0): foreach ($rejected as $row): ?>
+          <div class="col-md-6 col-lg-4">
+            <div class="card p-4">
+              <h5 class="card-title">Outpass #<?= $row["outpassId"] ?></h5>
+              <h6 class="card-subtitle mb-2 text-muted">Duration: <?= $row["from_date"];?> → <?= $row["to_date"];?> </h6>
+              <p class="card-text"><strong>Reason:</strong> <?= $row["reason"] ?></p>
+              <p class="card-text"><small>Created on <?= $row["created_on"] ?></small></p>
+              <span class='denied'>Denied ❌</span>
+            </div>
+          </div>
+        <?php endforeach; else: ?>
+          <p class="text-muted">No rejected requests.</p>
+        <?php endif; ?>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('.outpass-section').forEach(sec => sec.classList.add('d-none'));
+      document.getElementById(sectionId).classList.remove('d-none');
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

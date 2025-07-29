@@ -38,7 +38,7 @@ window.location.href = '/hostel/';
     <a class="navbar-brand">Students Details</a>
     <div class="d-flex" >  
     <a class="btn btn-outline-primary mx-2" href="./dashboard.php">Back</a>
-    <a class="btn btn-danger" href="./backend/logout.php">Logout</a>
+    <a class="btn btn-danger" href="../backend/logout.php">Logout</a>
     </div>
   </div>
 </nav>
@@ -55,9 +55,10 @@ window.location.href = '/hostel/';
                         <h6 class="card-subtitle mb-2 text-body-secondary">Year - <?= $row["year"] ?></h6>
                         <p class="card-text">Email : <?= $row["email"] ?></p>
                         <p class="card-text">Contact : <?= $row["contact"] ?></p>
-                      
+                         <p class="card-text">Enrollment No. : <?= $row["enrollment"] ?></p>
+
                     <div class="d-flex">
-                    <a href="/hostel/editDetail.php/?email=<?=$row["email"]?>" class="btn btn-success mx-2">EDIT</a>
+<a href="../staff/editDetail.php?email=<?= urlencode($row['email']) ?>" class="btn btn-success mx-2">EDIT</a>
                         <form action="backend/delete_backend.php" method="POST" onsubmit="return confirm('Are you sure you want to Delete this user?');">
                             <input type="text" value="<?= $row["email"] ?>" name="email" hidden></input>
                             <input class="btn btn-danger" type="submit" name="delete" value="Delete" />   </form>

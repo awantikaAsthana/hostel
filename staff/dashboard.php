@@ -1,13 +1,74 @@
-<?php
+<?php 
 session_start();
+include "../backend/connection.php";
+
 if (isset($_SESSION["loggedin"]) && isset($_SESSION["staff"])) {
 
+    $email = $_SESSION["email"]; 
+    $count="SELECT f_approval, count(*) from outpass WHERE approval = 1 GROUP BY  f_approval;";
+    $sql = "SELECT * FROM outpass o INNER JOIN STUDENT s on o.email = s.email WHERE o.approval=1 AND o.f_approval IS NULL ORDER BY  created_on DESC LIMIT 3 ";
+    $result = mysqli_query($conn, $sql);
+   $count_result = mysqli_query($conn,$count);
+   
+$pending = 0;
+$approved = 0;
+$rejected = 0;
+$total = 0;
+
+while ($row = mysqli_fetch_assoc($count_result)) {
+    if ($row['f_approval'] === NULL) {
+        $pending = $row['count(*)'];
+    } elseif ($row['f_approval'] == 1) {
+        $approved = $row['count(*)'];
+    } else {
+        $rejected = $row['count(*)'];
+    }
+    
+}
+
+$total = $pending+$approved+$rejected;
+
+    if (!$result) {
+        echo "<script>
+        alert('data cannot be fetched!')
+        window.location.href='/hostel/studentdetail.php';
+        </script>";
+    }
+    
 } else {
     echo "<script>
-alert('Please Login First!! ');
+alert('Login First');
 window.location.href = '/hostel/';
 </script>";
 
+}
+if (isset($_POST['approve'])) {
+    $outpassId = $_POST['outpassId'];
+    $email = $_POST['email'];
+    $r_approval = $_POST['r_approval'];
+
+    $sql = "UPDATE outpass SET f_approval = 1, assigned_staff='$email',r_approval='$r_approval' WHERE outpassId = '$outpassId'";
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>alert('Outpass request updated successfully!');
+        // window.location.href='/hostel/staff/dashboard.php';
+        </script>";
+    } else {
+        echo "<script>alert('Error updating outpass request. Please try again.');</script>";
+    }
+}
+
+if (isset($_POST['reject'])) {
+    $outpassId = $_POST['outpassId'];
+    $email = $_POST['email'];
+    $r_approval = $_POST['r_approval'];
+    $sql = "UPDATE outpass SET f_approval = 0, assigned_staff='$email',r_approval='$r_approval' WHERE outpassId = '$outpassId'";
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>alert('Outpass request updated successfully!');
+        winddow.location.href='/hostel/staff/dashboard.php';
+        </script>";
+    } else {
+        echo "<script>alert('Error updating outpass request. Please try again.');</script>";
+    }
 }
 
 ?>
@@ -15,133 +76,172 @@ window.location.href = '/hostel/';
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Warden Outpass Management Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="new.css">
 
-  <style>
-    :root {
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-color: #ffffff;
-      --card-bg: rgba(255, 255, 255, 0.03);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-      color: var(--text-color);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .navbar {
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .navbar .user {
-      font-size: 1.2rem;
-    }
-
-    .logout-btn {
-      background: transparent;
-      color: var(--text-color);
-      border: 1px solid var(--glass-border);
-      padding: 0.5rem 1rem;
-      min-height: 17rem;
-      border-radius: 8px;
-      cursor: pointer;
-      backdrop-filter: blur(5px);
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      padding: 2rem;
-      flex-grow: 1;
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--glass-border);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      transition: transform 0.2s ease-in-out;
-      max-height: 17rem;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .card a {
-      text-decoration: none;
-      color: var(--text-color);
-      font-size: 1.2rem;
-      font-weight: bold;
-      display: block;
-    }
-  </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="user">Welcome, <?= $_SESSION["name"]?></div>
-    <a href="/hostel/backend/logout.php" class="btn btn-danger">Logout</a>
-  </nav>
+  <div class="container-fluid">
+    <div class="row">
 
-  <div class="container">
-    <div class="card">
-      <img src="https://placehold.co/300x150" alt="Outpass Details">
-      <a href="/hostel/staff/outpass.php">Outpass Details</a>
-    </div>
-    <div class="card">
-      <img src="https://placehold.co/300x150" alt="Create Student">
-      <a href="/hostel/staff/signUp.php">Create Student</a>
-    </div>
-    <div class="card">
-      <img src="https://placehold.co/300x150" alt="Edit Student">
-      <a href="/hostel/staff/studentdetail.php">Edit Student</a>
-    </div>
-    <div class="card">
-      <img src="https://placehold.co/300x150" alt="View Student Details">
-      <a href="/hostel/staff/studentdetail.php">View Student Details</a>
+      <!-- Sidebar -->
+      <nav class="col-md-2 sidebar shadow">
+        <div class="text-center mb-4">
+          <!-- <img src="https://via.placeholder.com/80" class="rounded-circle mb-2 border border-light" alt="Warden"> -->
+          <h5>Warden Panel</h5>
+          <small>Welcome<?php echo " ";echo $_SESSION['name'];?></small>
+        </div>
+        <a href="../staff/new.php" class="active"> Dashboard</a>
+        <!-- new pages -->
+        <a href="../staff/pending.php"> Pending Requests</a>
+        <a href="../staff/approved.php"> Approved Requests</a>
+        <a href="../staff/rejected.php"> Rejected Requests</a>
+         <a href="../staff/studentdetail.php"> Edit Details</a>
+          <a href="../staff/signUp.php"> Create Student</a>
+        <!-- <a href="#"> Notifications</a>
+        <a href="#"> Settings</a> -->
+        <a href="../backend/logout.php"> Logout</a>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="col-md-10 content">
+        <h2 class="mb-4 text-primary">Warden Outpass Dashboard</h2>
+
+
+
+
+
+
+
+        <!-- Dashboard Cards -->
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="card p-3 shadow">
+              <div class="d-flex align-items-center">
+                <div class="me-3 card-icon">⏳</div>
+                <div>
+                  <h4><?php echo $pending?></h4>
+                  <p class="mb-0 text-muted">Pending Requests</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 shadow">
+              <div class="d-flex align-items-center">
+                <div class="me-3 card-icon">✅</div>
+                <div>
+                  <h4><?php echo $approved?></h4>
+                  <p class="mb-0 text-muted">Approved</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 shadow">
+              <div class="d-flex align-items-center">
+                <div class="me-3 card-icon">❌</div>
+                <div>
+                  <h4><?php echo $rejected?></h4>
+                  <p class="mb-0 text-muted">Rejected</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 shadow">
+              <div class="d-flex align-items-center">
+                <div class="me-3 card-icon">📊</div>
+                <div>
+                  <h4><?php echo $total?></h4>
+                  <p class="mb-0 text-muted">Total Requests</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Outpass Request Table -->
+        <div class="card mt-4 ">
+          <div class="card-header">
+            Pending Outpass Requests
+          </div>
+          <div class="card-body table-responsive">
+
+            <table class="table  align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Roll No</th>
+                  <th>Reason</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                 
+                </tr>
+              </thead>
+              <tbody>
+                          
+            <?php
+            foreach ($result as $row):
+
+                 ?>  
+                <tr>
+                  <td><?= $row["name"] ?></td>
+                  <td><?= $row["email"] ?></td>
+                  <td><?= $row["enrollment"] ?></td>
+                  <td><?= $row["reason"] ?></td>
+                  <td><?= $row["created_on"] ?></td>
+                  <td><span class="status-pending">Pending</span></td>
+                  
+            
+                </tr>
+ <?php
+                
+            endforeach;
+            ?>
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
+     
+
+        <!-- Notifications -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card shadow">
+              <div class="card-header">Recent Actions</div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">✅ Approved outpass for Priya Verma</li>
+                  <li class="list-group-item">❌ Rejected outpass for Rohan Mehta</li>
+                  <li class="list-group-item">✅ Approved outpass for Anjali Gupta</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card shadow">
+              <div class="card-header">Notifications</div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">📢 Hostel meeting scheduled for 22 July 2025</li>
+                  <li class="list-group-item">⚠️ Multiple students requested same-day outpass</li>
+                  <li class="list-group-item">✅ Weekly report generated</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
     </div>
   </div>
 
-  <script>
-    document.querySelector('.logout-btn').addEventListener('click', () => {
-      alert('Logged out successfully');
-      // Implement actual logout logic here
-    });
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

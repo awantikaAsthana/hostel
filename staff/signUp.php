@@ -56,6 +56,7 @@ if (isset($_POST['submit'])) {
   <title>Hostel ERP</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <link rel="stylesheet" href="../style/parentDashboard.css">
 
 </head>
 
@@ -80,8 +81,12 @@ if (isset($_POST['submit'])) {
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
           <input type="text" class="form-control" id="name" name="name">
-        </div>
 
+        </div>
+         <div class="mb-3">
+        <label for="enrollment" class="form-label">Enrollment No.</label>
+        <input type="number" class="form-control" id="enrollment" name="enrollment" max=9 min=9>
+      </div>
 
         <label for="email" class="form-label">Email address</label>
         <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">

@@ -4,206 +4,162 @@ include("../backend/connection.php");
 if(isset($_POST['parent_submit'])){
     $email=$_POST['email'];
     $password=$_POST['password'];
-    $sql="SELECT * FROM parents where parent_email ='$email' and password = '$password'";
+    $sql="SELECT * FROM parents WHERE email ='$email' AND password = '$password'";
     $result= mysqli_query($conn,$sql);
     if(!$result){
         die("Query failed " . mysqli_error($conn));
-
     }
     if(mysqli_num_rows($result)==1){
         $row = mysqli_fetch_assoc($result);
-
         session_start();
-        $_SESSION["parent_email"] = $row["parent_email"];
+        $_SESSION["parent_email"] = $row["email"];
         $_SESSION["student_email"] = $row["student_email"];
         $_SESSION["name"] = $row["name"];
         $_SESSION["id"] = $row["id"];
         $_SESSION["loggedin"] = true;
+         $_SESSION["parent"] = true;
         header("location: /hostel/parents/welcome.php");
-
-
-
-
-    }
-    else{
-        echo" <script>
-        alert('login failed! try again')
-        </script>
-        ";
+    } else {
+        echo"<script>alert('Login failed! Try again');</script>";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Design by foolishdeveloper.com -->
-    <title>Glassmorphism login Form Tutorial in html css</title>
- 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
-    <style media="screen">
-      *,
-*:before,
-*:after{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-body{
-    background-color: #080710;
-}
-.background{
-    width: 430px;
-    height: 520px;
-    position: absolute;
-    transform: translate(-50%,-50%);
-    left: 50%;
-    top: 50%;
-}
-.background .shape{
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    border-radius: 50%;
-}
-.shape:first-child{
-    background: linear-gradient(
-        #1845ad,
-        #23a2f6
-    );
-    left: -80px;
-    top: -80px;
-}
-.shape:last-child{
-    background: linear-gradient(
-        to right,
-        #ff512f,
-        #f09819
-    );
-    right: -30px;
-    bottom: -80px;
-}
-form{
-    height: 520px;
-    width: 457px;
-    background-color: rgba(255,255,255,0.13);
-    position: absolute;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 50px 35px;
-}
-form *{
-    font-family: 'Poppins',sans-serif;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    outline: none;
-    border: none;
-}
-form h3{
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 42px;
-    text-align: center;
-}
-
-label{
-    display: block;
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 500;
-}
-input{
-    display: block;
-    height: 50px;
-    width: 100%;
-    background-color: rgba(255,255,255,0.07);
-    border-radius: 3px;
-    padding: 0 10px;
-    margin-top: 8px;
-    font-size: 14px;
-    font-weight: 300;
-}
-::placeholder{
-    color: #e5e5e5;
-}
-#submit{
-    margin-top: 50px;
-    width: 100%;
-    background-color: #ffffff;
-    color: #080710;
-    padding: 15px 0;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.social{
-  margin-top: 30px;
-  display: flex;
-}
-.social a{
-  background: red;
-  width: 200px;
-  border-radius: 3px;
-  padding: 5px 10px 10px 5px;
-  background-color: rgba(255,255,255,0.27);
-  color: #eaf0fb;
-  text-align: center;
-  text-decoration: none !important;
-}
-.social a:hover{
-  background-color: rgba(255,255,255,0.47);
-}
-.social .fb{
-  margin-left: 25px;
-}
-.social i{
-  margin-right: 4px;
-}
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffb6f0, #cdb4ff, #a0e7ff);
+      background-size: 300% 300%;
+      animation: candyflow 10s ease infinite;
+      color: #2c2c2c;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+    }
+    @keyframes candyflow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      animation: float 6s ease-in-out infinite;
+      z-index: 0;
+    }
+    .shape.small { width: 80px; height: 80px; background: rgba(255,182,240,0.3);} 
+    .shape.medium { width: 150px; height: 150px; background: rgba(160,231,255,0.3);} 
+    .shape.large { width: 250px; height: 250px; background: rgba(205,180,255,0.3);} 
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+    .login-card {
+      position: relative;
+      z-index: 2;
+      max-width: 420px;
+      margin: 8% auto;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(15px);
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      color: #333;
+    }
+    .login-card h3 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: #4a2f52;
+      text-shadow: 0 2px 6px rgba(255,255,255,0.6);
+    }
+    .form-label {
+      color: #4a2f52;
+      font-weight: 600;
+    }
+    .form-control {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #e4d7f7;
+      border-radius: 15px;
+      color: #333;
+    }
+    .form-control::placeholder {
+      color: #8c7a99;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, #ffb6f0, #cdb4ff, #a0e7ff);
+      color: #4a2f52;
+      border: none;
+      transition: 0.3s;
+    }
+    .btn-login:hover {
+      background: linear-gradient(45deg, #a0e7ff, #ffb6f0);
+      color: #fff;
+    }
+    .social-links {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .social-links a {
+      flex: 1;
+      text-align: center;
+      margin: 5px;
+      padding: 10px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 15px;
+      color: #4a2f52;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .social-links a:hover {
+      background: rgba(255,255,255,1);
+      color: #000;
+    }
+  </style>
 </head>
 <body>
-    <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
+  <!-- Floating shapes -->
+  <div class="shape small" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+  <div class="shape medium" style="top: 60%; left: 80%; animation-delay: 2s;"></div>
+  <div class="shape large" style="top: 30%; left: 50%; animation-delay: 4s;"></div>
+
+  <div class="login-card">
+    <h3>Parent Login</h3>
     <form method="post">
-        <h3>Parent Login </h3>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" required>
+      </div>
+      <button type="submit" name="parent_submit" class="btn-login">Login</button>
 
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="Email" required>
-
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
-        <input type="submit" name="parent_submit" id="submit" placeholder="Password" >
-        <div class="social">
-          <a href="/hostel/staff/staffLogin.php" class="go"><i class="fas fa-school"></i>
-          Staff</a>
-          <a href="/hostel/student/login.php" class="fb"><i class="fas fa-user-graduate"></i>
-
-          Student</a>
-          <a class="fb" href='/hostel/security/securitylogin.php'><i class="fas fa-shield-alt"></i>Security
-
-          </a>
-          
-          
-
-        </div>
+      <div class="social-links">
+        <a href="/hostel/staff/staffLogin.php"><i class="fas fa-school"></i> Staff</a>
+        <a href="/hostel/student/login.php"><i class="fas fa-user-graduate"></i> Student</a>
+        <a href="/hostel/security/securitylogin.php"><i class="fas fa-shield-alt"></i> Security</a>
+      </div>
     </form>
-    <script>
-        function clickNow(x){
-           window.location.href=x
+  </div>
 
-        }
-    </script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
