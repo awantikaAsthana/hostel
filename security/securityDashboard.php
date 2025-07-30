@@ -58,6 +58,7 @@ $rejected = mysqli_query($conn, $sql_rejected);
         <div class="d-flex">
             <a class="btn btn-outline-primary mx-2" href="/hostel/security/welcome.php">Back</a>
             <a class="btn btn-danger" href="../backend/logout.php">Logout</a>
+                 <a href="../security/changepassword.php" class="btn btn-primary" >Settings</a>
         </div>
     </div>
 </nav>

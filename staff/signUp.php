@@ -8,17 +8,21 @@ if (isset($_POST['submit'])) {
   $password = mysqli_real_escape_string($conn, $_POST['password']);
   $cpassword = mysqli_real_escape_string($conn, $_POST['cpassword']);
   $name = mysqli_real_escape_string($conn, $_POST['name']);
-  $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+  
   $year = mysqli_real_escape_string($conn, $_POST['year']);
   $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+  $enrollment=mysqli_real_escape_string($conn,$_POST['enrollment']);
 
   // Email should be Unique
   $check_email = ('select * from student where email= "$email"');
   $result = mysqli_query($conn, $check_email);
   $count = mysqli_num_rows($result);
   if ($count == 0) {
-    if ($password == $cpassword) { // checking id password is same as Confirm Password
-      $sql = "INSERT INTO student (name, email, password, dob, year, contact) VALUES ('$name', '$email', '$password', '$dob', '$year', '$contact')";
+   if ($password == $cpassword) {
+  $hashed_password = password_hash($password, PASSWORD_DEFAULT); // secure hashing
+  $sql = "INSERT INTO student (name, email, password,  year, contact, enrollment) 
+          VALUES ('$name', '$email', '$hashed_password',  '$year', '$contact','$enrollment')";
+
       $result = mysqli_query($conn, $sql);
       echo "
     <script>
@@ -85,7 +89,7 @@ if (isset($_POST['submit'])) {
         </div>
          <div class="mb-3">
         <label for="enrollment" class="form-label">Enrollment No.</label>
-        <input type="number" class="form-control" id="enrollment" name="enrollment" max=9 min=9>
+        <input type="number" class="form-control" id="enrollment" name="enrollment" >
       </div>
 
         <label for="email" class="form-label">Email address</label>
@@ -104,10 +108,7 @@ if (isset($_POST['submit'])) {
 
 
 
-      <div class="mb-3">
-        <label for="dob" class="form-label">Date of Birth</label>
-        <input type="date" class="form-control" id="dob" name="dob">
-      </div>
+      
 
       <div class="mb-3">
         <label for="contact" class="form-label">Phone no.</label>

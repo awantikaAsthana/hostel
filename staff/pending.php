@@ -23,7 +23,7 @@ window.location.href = '/hostel/';
  $email = $_SESSION["email"];
 
 
-$sql_pending = "SELECT * FROM outpass WHERE email='$email' AND  approval IS NOT NULL AND f_approval IS NULL  ORDER BY created_on DESC";
+$sql_pending = "SELECT * FROM outpass WHERE email='$email' AND  approval =1 AND f_approval IS NULL  ORDER BY created_on DESC";
 
 
 $pending = mysqli_query($conn, $sql_pending);
@@ -86,6 +86,7 @@ if (isset($_POST['reject'])) {
         <a href="../staff/rejected.php"> Rejected Requests</a>
         <a href="../staff/studentdetail.php"> Edit Details</a>
           <a href="../staff/signUp.php"> Create Student</a>
+          <a href="../staff/changepassword.php"> Settings</a>
         <!-- <a href="#"> Notifications</a>
         <a href="#"> Settings</a> -->
         <a href="../backend/logout.php"> Logout</a>

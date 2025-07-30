@@ -100,6 +100,7 @@ if (isset($_POST['reject'])) {
         <a href="../staff/rejected.php"> Rejected Requests</a>
          <a href="../staff/studentdetail.php"> Edit Details</a>
           <a href="../staff/signUp.php"> Create Student</a>
+          <a href="../staff/changepassword.php"> Settings</a>
         <!-- <a href="#"> Notifications</a>
         <a href="#"> Settings</a> -->
         <a href="../backend/logout.php"> Logout</a>
@@ -213,7 +214,7 @@ if (isset($_POST['reject'])) {
         <div class="row mt-4">
           <div class="col-md-6">
             <div class="card shadow">
-              <div class="card-header">Recent Actions</div>
+              <div class="card-header">Recent Actions (Features to be added)</div>
               <div class="card-body">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">✅ Approved outpass for Priya Verma</li>
@@ -226,7 +227,7 @@ if (isset($_POST['reject'])) {
 
           <div class="col-md-6">
             <div class="card shadow">
-              <div class="card-header">Notifications</div>
+              <div class="card-header">Notifications (Features to be added)</div>
               <div class="card-body">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">📢 Hostel meeting scheduled for 22 July 2025</li>

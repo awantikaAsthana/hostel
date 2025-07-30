@@ -56,6 +56,7 @@ window.location.href = '/hostel/';
     <!-- <a class="navbar-brand "><?php echo $_SESSION['name'];?></a> -->
     <form class="d-flex" role="search">  
     <a class="btn btn-danger" href="../backend/logout.php">Logout</a>
+    <a class="btn btn-primary" href="../parents/changepassword.php">Settings</a>
     </form>
   </div>
 </nav>
