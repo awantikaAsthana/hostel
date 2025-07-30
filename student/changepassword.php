@@ -27,6 +27,7 @@ if(isset($_POST["submit"])) {
     echo "<script>alert('New passwords do not match!');</script>";
   } else {
     // Update password
+    $new = password_hash($new, PASSWORD_DEFAULT); // Hash the new password
     $update = "UPDATE student SET password='$new' WHERE email='$email'";
     if(mysqli_query($conn, $update)) {
       echo "<script>alert('Password changed successfully!'); window.location.href='welcome.php';</script>";

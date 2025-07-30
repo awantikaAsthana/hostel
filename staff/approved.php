@@ -54,7 +54,9 @@ $approved = mysqli_query($conn, $sql_approved);
         <a href="../staff/approved.php"  class="active"> Approved Requests</a>
         <a href="../staff/rejected.php"> Rejected Requests</a>
         <a href="../staff/studentdetail.php"> Edit Details</a>
-          <a href="../staff/signUp.php"> Create Student</a>
+          <a href="../staff/createuserstudent.php"> Create Student</a>
+          <a href="../staff/createuserparent.php"> Create Parent</a>
+          <a href="../staff/createusersecurity.php"> Create Secutiry</a>
           <a href="../staff/changepassword.php"> Settings</a>
         <!-- <a href="#"> Notifications</a>
         <a href="#"> Settings</a> -->

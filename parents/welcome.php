@@ -3,8 +3,6 @@ include("../backend/connection.php");
 session_start();
 if (isset($_SESSION["loggedin"]) && isset($_SESSION["parent"])) {
 $student_email=$_SESSION["student_email"];
-    $email = $_SESSION["parent_email"]; 
-  
     $sql = "SELECT * FROM outpass o INNER JOIN STUDENT s on o.email = s.email WHERE o.email = '$student_email' AND o.approval IS NULL ORDER BY  created_on DESC LIMIT 3 ";
    $sql2 = "SELECT * FROM student WHERE email='$student_email'";
     $result = mysqli_query($conn, $sql);
@@ -72,9 +70,9 @@ window.location.href = '/hostel/';
                     <div class="card-body">
                         <h5 class="card-title">Name</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary"> <?php echo $name;?></h6>
-                        <!-- <p class="card-text">Email : </p> -->
-                        <!-- <p class="card-text">Contact : </p> -->
-                         <!-- <p class="card-text">Enrollment No. : </p> -->
+                        
+                        
+                         
 
                    
                         
@@ -87,9 +85,9 @@ window.location.href = '/hostel/';
                     <div class="card-body">
                         <h5 class="card-title">Enrollment No.</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary"> <?php echo $enrollment;?> </h6>
-                        <!-- <p class="card-text">Email : </p> -->
-                        <!-- <p class="card-text">Contact : </p> -->
-                         <!-- <p class="card-text">Enrollment No. : </p> -->
+                        
+                        
+                         
 
                    
                         
@@ -103,9 +101,9 @@ window.location.href = '/hostel/';
                     <div class="card-body">
                         <h5 class="card-title">Course</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary"> <?php echo $course;?></h6>
-                        <!-- <p class="card-text">Email : </p> -->
-                        <!-- <p class="card-text">Contact : </p> -->
-                         <!-- <p class="card-text">Enrollment No. : </p> -->
+                        
+                        
+                         
 
                    
                         
@@ -119,9 +117,9 @@ window.location.href = '/hostel/';
                     <div class="card-body">
                         <h5 class="card-title">Year</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary"> <?php echo $year;?> </h6>
-                        <!-- <p class="card-text">Email : </p> -->
-                        <!-- <p class="card-text">Contact : </p> -->
-                         <!-- <p class="card-text">Enrollment No. : </p> -->
+                        
+                        
+                         
 
                    
                         

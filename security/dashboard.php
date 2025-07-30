@@ -3,7 +3,6 @@ session_start();
 include "../backend/connection.php";
 
 if (isset($_SESSION["loggedin"])) {
-    $email = $_SESSION["security_email"];
     $sql = "SELECT * FROM outpass o INNER JOIN STUDENT s on o.email = s.email ORDER BY created_on DESC";
     $result = mysqli_query($conn, $sql);
     $count = mysqli_num_rows($result);
@@ -23,9 +22,6 @@ if (isset($_SESSION["loggedin"])) {
     exit();
 
 }
-
-
-
 
 $sql_approved = "SELECT * FROM outpass o 
                  INNER JOIN student s ON o.email = s.email 
@@ -74,7 +70,7 @@ $rejected = mysqli_query($conn, $sql_rejected);
 
    
     <!-- Approved Section -->
-    <div id="approved-section" class="outpass-section d-none">
+    <div id="approved-section" class="outpass-section">
       <h2 class="mt-5 mb-4">✅ Approved Outpasses</h2>
       <div class="row g-4 justify-content-center">
         <?php if(mysqli_num_rows($approved) > 0): foreach ($approved as $row): ?>

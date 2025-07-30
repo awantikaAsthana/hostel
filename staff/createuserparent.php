@@ -8,20 +8,20 @@ if (isset($_POST['submit'])) {
   $password = mysqli_real_escape_string($conn, $_POST['password']);
   $cpassword = mysqli_real_escape_string($conn, $_POST['cpassword']);
   $name = mysqli_real_escape_string($conn, $_POST['name']);
-  
-  $year = mysqli_real_escape_string($conn, $_POST['year']);
+  $student_email = mysqli_real_escape_string($conn, $_POST['student_email']);
   $contact = mysqli_real_escape_string($conn, $_POST['contact']);
-  $enrollment=mysqli_real_escape_string($conn,$_POST['enrollment']);
+
 
   // Email should be Unique
-  $check_email = ('select * from student where email= "$email"');
+  $check_email = ('select * from parents where email= "$email"');
   $result = mysqli_query($conn, $check_email);
   $count = mysqli_num_rows($result);
   if ($count == 0) {
    if ($password == $cpassword) {
-  $hashed_password = password_hash($password, PASSWORD_DEFAULT); // secure hashing
-  $sql = "INSERT INTO student (name, email, password,  year, contact, enrollment) 
-          VALUES ('$name', '$email', '$hashed_password',  '$year', '$contact','$enrollment')";
+    echo $password;
+      $hashed_password = password_hash($password, PASSWORD_DEFAULT); // secure hashing
+  $sql = "INSERT INTO parents    (name, email, password,  student_email, contact) 
+          VALUES ('$name', '$email', '$hashed_password',  '$student_email', '$contact')";
 
       $result = mysqli_query($conn, $sql);
       echo "
@@ -34,7 +34,7 @@ if (isset($_POST['submit'])) {
       echo "
     <script>
     alert('password does not match!try again.');
-    window.location.href='/hostel/staff/signUp.php';
+    window.location.href='/hostel/staff/createuserparent.php';
     </script>
     ";
     }
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
     echo "
   <script>
   alert('Email already exists! try again.');
-  window.location.href='/hostel/staff/signUp.php';
+ window.location.href='/hostel/staff/createuserparent.php';
   </script>
   ";
   }
@@ -67,7 +67,7 @@ if (isset($_POST['submit'])) {
 <body>
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand">Add Student</a>
+    <a class="navbar-brand">Add parent</a>
     <div class="d-flex" >  
     <a class="btn btn-outline-primary mx-2" href="./dashboard.php">Back</a>
     <a class="btn btn-danger" href="../backend/logout.php">Logout</a>
@@ -77,9 +77,9 @@ if (isset($_POST['submit'])) {
   <div class="container col-5 m-auto">
 
     <h1 class="display-4 text-center">Hostel Management System</h1>
-    <h3 class="text-center ">Please enter student details</h3>
+    <h3 class="text-center ">Please enter Parent details</h3>
     <br>
-    <form action="signUp.php" method="post">
+    <form action="#" method="post">
       <div class="mb-3">
 
         <div class="mb-3">
@@ -87,10 +87,6 @@ if (isset($_POST['submit'])) {
           <input type="text" class="form-control" id="name" name="name">
 
         </div>
-         <div class="mb-3">
-        <label for="enrollment" class="form-label">Enrollment No.</label>
-        <input type="number" class="form-control" id="enrollment" name="enrollment" >
-      </div>
 
         <label for="email" class="form-label">Email address</label>
         <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
@@ -106,22 +102,18 @@ if (isset($_POST['submit'])) {
         <input type="password" class="form-control" id="cpassword" name="cpassword">
       </div>
 
-
-
-      
-
       <div class="mb-3">
         <label for="contact" class="form-label">Phone no.</label>
         <input type="tel" class="form-control" id="contact" name="contact">
       </div>
 
       <div class="mb-3">
-        <label for="year" class="form-label">Year</label>
-        <input type="number" class="form-control" id="year" name="year" max=4 min=1>
+        <label for="student_email" class="form-label">Student Email</label>
+        <input type="text" class="form-control" id="student_email" name="student_email">
       </div>
 
 
-      <button type="submit" class="btn btn-primary " name="submit">Add Student</button>
+      <button type="submit" class="btn btn-primary " name="submit">Add Parent Member</button>
     </form>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

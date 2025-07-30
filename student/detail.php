@@ -65,7 +65,7 @@ $rejected = mysqli_query($conn, $sql_rejected);
 
     <!-- Pending Section -->
     <div id="pending-section" class="outpass-section">
-      <h2 class="mb-4">⏳ Pending Outpasses</h2>
+      <h2 class="mt-5 mb-4">⏳ Pending Outpasses</h2>
       <div class="row g-4 justify-content-center">
         <?php if(mysqli_num_rows($pending) > 0): foreach ($pending as $row): ?>
           <div class="col-md-6 col-lg-4">

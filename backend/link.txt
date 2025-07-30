@@ -1,1 +1,1 @@
-http://localhost/hostel/student/parentConfirmation.php?id=5 
+http://localhost/hostel/student/parentConfirmation.php?id=6 
